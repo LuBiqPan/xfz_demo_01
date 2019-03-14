@@ -1,0 +1,106 @@
+
+{% extends 'base/front_base.html' %}
+
+
+{% block title %}
+    首页
+{% endblock %}
+
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/news/index.min.css' %}">
+    <script src="{% static 'js/index.min.js' %}"></script>
+{% endblock %}
+
+
+{% block main %}
+    <div class="main">
+        <div class="wrapper">
+            <div class="main-content-wrapper">
+                <div class="banner-group" id="banner-group">
+                    <ul class="banner-ul" id="banner-ul">
+                        <li>
+                            <a href="https://zhongchou.modian.com/item/47181.html" target="_blank">
+                                <img src="{% static 'images/banner/banner1.jpg' %}" alt="">
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://zhongchou.modian.com/item/46311.html" target="_blank">
+                                <img src="{% static 'images/banner/banner2.jpg' %}" alt="">
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <img src="{% static 'images/banner/banner3.jpg' %}" alt="">
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://zhongchou.modian.com/item/43740.html">
+                                <img src="{% static 'images/banner/banner4.jpg' %}" alt="">
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <img src="{% static 'images/banner/banner5.jpg' %}" alt="">
+                            </a>
+                        </li>
+                    </ul>
+                    <span class="arrow left-arrow">‹</span>
+                    <span class="arrow right-arrow">›</span>
+                    <div class="page-control-group">
+                        <ul class="page-control">
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="list-outer-group">
+                    <ul class="list-tab">
+                        <li class="active"><a href="#">最新资讯</a></li>
+                        <li><a href="#">热点</a></li>
+                        <li><a href="#">深度报道</a></li>
+                        <li><a href="#">干货分享</a></li>
+                        <li><a href="#">投资人说</a></li>
+                    </ul>
+                    <ul class="list-inner-group">
+                        <li>
+                            <div class="thumbnail-group">
+                                <a href="#">
+                                    <img src="{% static 'images/thumbnail/thumbnail01.jpg' %}" alt="">
+                                </a>
+                            </div>
+                            <div class="news-group">
+                                <p class="title"><a href="#">首发丨A轮融资数千万，这家公司要让7000万人学会滑雪</a></p>
+                                <p class="desc">据中国旅游研究院发布的预测，2021-2022冰雪季</p>
+                                <p class="more">
+                                    <span class="category">雪乐山</span>
+                                    <span class="pub-time">1小时前</span>
+                                    <span class="author">知了课堂</span>
+                                </p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="thumbnail-group">
+                                <a href="#">
+                                    <img src="{% static 'images/thumbnail/thumbnail02.jpg' %}" alt="">
+                                </a>
+                            </div>
+                            <div class="news-group">
+                                <p class="title"><a href="#">伟芯光电获水木资本天使轮投资</a></p>
+                                <p class="desc">本轮融资资金将主要用于光通信芯片设计和样品开发</p>
+                                <p class="more">
+                                    <span class="category">水木资本</span>
+                                    <span class="pub-time">2小时前</span>
+                                    <span class="author">不凡商业</span>
+                                </p>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="load-more-group">
+                        <button class="load-more">More</button>
+                    </div>
+                </div>
+            </div>
+            {% include 'common/sidebar.html' %}
+        </div>
+    </div>
+{% endblock %}

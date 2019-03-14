@@ -1,0 +1,76 @@
+
+@import "../common/init";
+@import "../common/constants";
+@import "../common/header";
+@import "../common/body";
+@import "../common/footer";
+
+
+.main{
+	.wrapper{
+		.main-content-wrapper{
+			float: left;
+			width: $mainBoxWidth;
+			
+			.advertise-group{
+				width: 100%;
+				height: 200px;
+			}
+			
+			.document-list{
+				background: #fff;
+				padding: 20px;
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				justify-content: space-between;
+				
+				
+				li{
+					width: 370px;
+					height: 150px;
+					border: 1px solid #ccc;
+					margin-bottom: 20px;
+					overflow: hidden;
+					
+					.category-group{
+						width: 100px;
+						height: 100%;
+						float: left;
+						background-image: url("https://www.bufanbiz.com/static/build/images/web-bp-pc.png");
+						background-size: 100%;
+					}
+					
+					.document-info{
+						float: left;
+						padding: 10px;
+						width: 270px;
+						height: 150px;
+						position: relative;
+						box-sizing: border-box;
+						
+						.document-title{
+							color: $titleColor;
+							font-size: 16px;
+						}
+						
+						.document-desc{
+							color: $descriptionColor;
+							font-size: 14px;
+							margin-top: 20px;
+						}
+						
+						.document-price{
+							position: absolute;
+							left: 0;
+							right: 20px;
+							bottom: 20px;
+							color: $payColor;
+							text-align: right;
+						}
+					}
+				}
+			}
+		}
+	}
+}
