@@ -112,6 +112,7 @@ Auth.prototype.run = function () {
     self.listenShowHideEvent();
     self.listenSwitchEvent();
     self.listenSigninEvent();
+    self.listenSignupEvent();
     self.listenImgCaptchaEvent();
     self.listenSmsCaptchaEvent();
 };
@@ -193,48 +194,51 @@ Auth.prototype.listenSigninEvent = function () {
                 'csrfmiddlewaretoken': $('#csrf_token').val()
             },
             'success': function (result) {
-                console.log(result);
-                if (result['code'] === 200) {
-                    self.hideEvent();
-                    window.location.reload();
-                } else {
-                    console.log('Login failed.');
-                    var messageObject = result['message'];
-                    if (typeof messageObject == 'string' || messageObject.constructor == String) {
-                        console.log(messageObject);
-                        window.messageBox.show(messageObject);
-                    } else {
-                        for (var key in messageObject) {
-                            var messages = messageObject[key];
-                            var message = messages[0];
-                            console.log(message);
-                            window.messageBox.show(message);
-                        }
-                    }
-                }
-            },
-            'fail': function (error) {
-                console.log(error);
+                window.location.reload();
             }
         });
-        // myajax.post({
-        //     'url': '/account/login/',
-        //     'data': {
-        //         'telephone': telephone,
-        //         'password': password,
-        //         'remember': remember?1:0,
-        //         'csrfmiddlewaretoken': $('#csrf_token').val()
-        //     },
-        //     'success': function (result) {
-        //         console.log('==============');
-        //         console.log(result);
-        //         console.log('==============');
-        //     },
-        //     'fail': function (error) {
-        //         console.log(error);
-        //     }
-        // });
     });
+};
+
+Auth.prototype.listenSignupEvent = function () {
+    var signupGroup = $(".signup-group");
+    var submitBtn = signupGroup.find(".submit-btn");
+    submitBtn.click(function (event) {
+        event.preventDefault();
+        var telephoneInput = signupGroup.find("input[name='telephone']");
+        var usernameInput = signupGroup.find("input[name='username']");
+        var imgCaptchaInput = signupGroup.find("input[name='img_captcha']");
+        var password1Input = signupGroup.find("input[name='password1']");
+        var password2Input = signupGroup.find("input[name='password2']");
+        var smsCaptchaInput = signupGroup.find("input[name='sms_captcha']");
+
+        var telephone = telephoneInput.val();
+        var username = usernameInput.val();
+        var imgCaptcha = imgCaptchaInput.val();
+        var password1 = password1Input.val();
+        var password2 = password2Input.val();
+        var smsCaptcha = smsCaptchaInput.val();
+
+        xfzajax.post({
+            "url": "/account/register/",
+            "data": {
+                "telephone": telephone,
+                "username": username,
+                "img_captcha": imgCaptcha,
+                "password1": password1,
+                "password2": password2,
+                "sms_captcha": smsCaptcha
+            },
+            "success": function (result) {
+                if (result.code === 200) {
+                    window.location.reload();
+                }
+            },
+            "fail": function (error) {
+                window.messageBox.showError("Server internal error.")
+            }
+        })
+    })
 };
 
 Auth.prototype.listenImgCaptchaEvent = function () {
@@ -248,7 +252,7 @@ Auth.prototype.smsSuccessEvent = function () {
     var self = this;
     messageBox.showSuccess('短信验证码发送成功');
     self.smsCaptcha.addClass('disabled');    // 将发送验证码按钮变成灰色
-    var count = 60;     // 60秒倒计时
+    var count = 30;     // 60秒倒计时
     self.smsCaptcha.unbind('click');     // 取消按钮点击
     var timer = setInterval(function () {
         self.smsCaptcha.text(count + "s");     // 显示倒计时
@@ -264,6 +268,7 @@ Auth.prototype.smsSuccessEvent = function () {
 
 Auth.prototype.listenSmsCaptchaEvent = function () {
     var self = this;
+    var smsCaptcha = $(".sms-captcha-btn");
     var telephoneInput = $(".signup-group input[name='telephone']");
     smsCaptcha.click(function () {
         var telephone = telephoneInput.val();

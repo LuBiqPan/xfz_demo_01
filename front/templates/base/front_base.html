@@ -5,6 +5,7 @@
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="//at.alicdn.com/t/font_1039577_khtvdecajw.css">
     <link rel="stylesheet" href="{% static '/css/common/auth.min.css' %}">
+    <link rel="Shortcut Icon" href="{% static '/images/others/logo.ico' %}">
     <script src="{% static '/js/jquery-3.3.1.min.js' %}"></script>
     <script src="{% static '/js/message.min.js' %}"></script>
     <script src="{% static '/js/xfzajax.min.js' %}"></script>
@@ -31,7 +32,9 @@
                     <a href="#" class="authenticated-box">{{ user.username }}</a>
                     <div class="user-more-box">
                         <i class="triangle"></i>
-                        <a href="#">管理系统</a>
+                        {% if user.is_staff %}
+                            <a href="{% url 'cms:index' %}">管理系统</a>
+                        {% endif %}
                         <a href="{% url 'xfzauth:logout' %}">退出登录</a>
                     </div>
                 {% else %}
@@ -138,10 +141,10 @@
                                 </div>
                             </div>
                             <div class="input-group">
-                                <input type="password" class="form-control" name="password" placeholder="密码">
+                                <input type="password" class="form-control" name="password1" placeholder="密码">
                             </div>
                             <div class="input-group">
-                                <input type="password" class="form-control" name="password_repeat" placeholder="确认密码">
+                                <input type="password" class="form-control" name="password2" placeholder="确认密码">
                             </div>
                             <div class="input-group">
                                 <div class="short-input-group">

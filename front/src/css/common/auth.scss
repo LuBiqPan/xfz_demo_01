@@ -138,12 +138,19 @@ body{
 								
 								.sms-captcha-btn{
 									width: 100%;
-									height: 100%;
-									color: #fff;
-									line-height: 40px;
+                                    height: 40px;
+                                    border: 1px solid $themeColor;
+                                    //color: $themeColor;
+                                    color: #fff;
+                                    display: inline-block;
+                                    text-align: center;
+                                    line-height: 40px;
+                                    box-sizing: border-box;
+                                    cursor: pointer;
 								}
 								
 								.disabled{
+									background: #a5a5a5;
 									color: #ccc;
 									border: #ccc;
 								}
