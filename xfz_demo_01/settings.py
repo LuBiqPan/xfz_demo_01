@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'apps.news',
     'apps.cms',
     'apps.xfzauth',
+    'apps.ueditor',
 ]
 
 MIDDLEWARE = [
@@ -145,3 +146,22 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# Qiniu configuration.
+QINIU_ACCESS_KEY = '8pcP0B14wtgUL1pJg9QHdwJ-c-73Y6FzsbaZ-nPV'
+QINIU_SECRET_KEY = 'clIF6Eflvakr56YT5YivNeZM-JA4r2H49X0PV3lW'
+QINIU_BUCKET_NAME = 'xfz_demo_01'
+QINIU_DOMAIN = 'http://porbkvyou.bkt.clouddn.com/'
+
+
+# UEditor configuration.
+UEDITOR_UPLOAD_TO_QINIU = True
+UEDITOR_QINIU_ACCESS_KEY = QINIU_ACCESS_KEY
+UEDITOR_QINIU_SECRET_KEY = QINIU_SECRET_KEY
+UEDITOR_QINIU_BUCKET_NAME = QINIU_BUCKET_NAME
+UEDITOR_QINIU_DOMAIN = QINIU_DOMAIN
+
+UEDITOR_UPLOAD_TO_SERVER = True
+UEDITOR_UPLOAD_PATH = MEDIA_ROOT
+UEDITOR_CONFIG_PATH = os.path.join(BASE_DIR, 'front', 'dist', 'ueditor', 'config.json')

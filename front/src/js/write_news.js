@@ -3,6 +3,13 @@ function News(){
 
 }
 
+News.prototype.initUEditor = function () {
+    window.ue = UE.getEditor("editor", {
+        "initialFrameHeight": 400,
+        "serverUrl": "/ueditor/upload/"
+    });
+};
+
 News.prototype.listenUploadFileEvent = function () {
     var self = this;
     var uploadBtn = $("#thumbnail-btn");
@@ -37,11 +44,14 @@ News.prototype.listenUploadQiniuFileEvent = function () {
             "success": function (result) {
                 if (result["code"] === 200) {
                     var token = result["data"]["token"];
-                    var key = (new Date()).getTime() + "." + file.name.split(".")[1];
+                    // Split file name with "." and return array length.
+                    var fileLength = file.name.split(".").length;
+                    // Select the last element as suffix.
+                    var key = (new Date()).getTime() + "." + file.name.split(".")[fileLength-1];
                     var putExtra = {
                         fname: key,
                         params: {},
-                        mimeType: ["image/png", "image/jpeg", "image/gif"]
+                        mimeType: ["image/png", "image/jpeg", "image/gif", "audio/mp3"]
                     };
                     var config = {
                         userCdnDomain: true,
@@ -63,24 +73,66 @@ News.prototype.listenUploadQiniuFileEvent = function () {
 News.prototype.handleFileUploadProgress = function (response) {
     var total = response.total;
     var percent = total.percent;
-    console.log(percent);
+    var percentText = percent.toFixed(0) + "%";
+    // console.log(percent);
+    var progressGroup = News.progressGroup;
+    progressGroup.show();
+    var progressBar = $(".progress-bar");
+    progressBar.css({"width": percentText});
+    progressBar.text(percentText);
 };
 
 News.prototype.handleFileUploadError = function (error) {
     console.log(error);
+    var progressGroup = News.progressGroup;
+    progressGroup.hide();
 };
 
 News.prototype.handleFileUploadComplete = function (response) {
     console.log(response);
+    var progressGroup = News.progressGroup;
+    progressGroup.hide();
+
+    // Show url in input tag.
+    var domain = "http://porbkvyou.bkt.clouddn.com";
+    var fileName = response.key;
+    var url = domain + fileName;
+    var thumbnailInput = $("input[name='thumbnail']");
+    thumbnailInput.val(url);
+
+    // Upload done, reset progress bar to 0%.
+    var progressBar = $(".progress-bar");
+    progressBar.css({"width": "0"});
+    progressBar.text("0%");
+};
+
+News.prototype.listenSubmitEvent = function () {
+    var submitBtn = $("#submit-btn");
+    submitBtn.click(function (event) {
+        event.preventDefault();
+
+        var title = $("input[name='title']").val();
+        var category = $("select[name='select']").val();
+        var desc = $("input[name='desc']").val();
+        var thumbnail = $("input[name='thumbnail']").val();
+        var content = window.ue.getContent();
+        console.log(content);
+
+        xfzajax({});
+    });
 };
 
 News.prototype.run = function () {
     var self = this;
+    self.initUEditor();
     // self.listenUploadFileEvent();
     self.listenUploadQiniuFileEvent();
+    self.listenSubmitEvent();
 };
 
 $(function () {
     var news = new News();
     news.run();
+
+    News.progressGroup = $("#progress-group");
 });
