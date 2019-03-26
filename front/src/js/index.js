@@ -144,7 +144,74 @@ Banner.prototype.run = function () {
 };
 
 
+function Index () {
+    var self = this;
+    self.page = 2;
+
+    template.defaults.imports.timeSince = function (dateValue) {
+        var date = new Date(dateValue);
+        var datets = date.getTime();    // Time in millisecond.
+        var nowts = (new Date()).getTime();
+        var timeStamp = (nowts - datets) / 1000; // In second.
+
+        if (timeStamp < 60) {
+            return '刚刚';
+        } else if (timeStamp >= 60 && timeStamp < 60*60) {
+            var minutes = parseInt(timeStamp/60);
+            return  minutes + '分钟前';
+        } else if (timeStamp >= 60*60 && timeStamp < 60*60*24) {
+            var hours = parseInt(timeStamp/60/60);
+            return hours + '小时前';
+        } else if ( timeStamp >= 60*60*24 && timeStamp < 60*60*24*30) {
+            var days = parseInt(timeStamp/60/60/24);
+            return days + '天前';
+        } else {
+            var year = date.getFullYear();
+            var month = date.getMonth();
+            var day = date.getDay();
+            var hour = date.getHours();
+            var minute = date.getMinutes();
+            return year + "/" + month + "/" + day + " " + hour + ": " + minute;
+        }
+    }
+}
+
+Index.prototype.listenLoadMoreEvent = function () {
+    var self = this;
+    var loadMoreBtn = $("#load-more-btn");
+    loadMoreBtn.click(function () {
+        xfzajax.get({
+            "url": "/news/list/",
+            "data": {
+                "p": self.page
+            },
+            "success": function (result) {
+                if (result["code"] === 200) {
+                    // console.log(result);
+                    var newses = result["data"];
+                    if (newses.length > 0) {
+                        var tpl = template("news-item", {"newses": newses});
+                        var ul = $(".list-inner-group");
+                        ul.append(tpl);
+                        self.page += 1;
+                    } else {
+                        loadMoreBtn.hide();
+                    }
+                }
+            }
+        });
+    });
+};
+
+Index.prototype.run = function () {
+    var self = this;
+    self.listenLoadMoreEvent();
+};
+
+
 $(function () {
     var banner = new Banner();
+    var index = new Index();
     banner.run();
+    index.run();
 });

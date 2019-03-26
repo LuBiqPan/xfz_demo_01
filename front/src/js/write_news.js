@@ -94,7 +94,7 @@ News.prototype.handleFileUploadComplete = function (response) {
     progressGroup.hide();
 
     // Show url in input tag.
-    var domain = "http://porbkvyou.bkt.clouddn.com";
+    var domain = "http://porbkvyou.bkt.clouddn.com/";
     var fileName = response.key;
     var url = domain + fileName;
     var thumbnailInput = $("input[name='thumbnail']");

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
 
     'apps.news',
     'apps.cms',
@@ -165,3 +166,6 @@ UEDITOR_QINIU_DOMAIN = QINIU_DOMAIN
 UEDITOR_UPLOAD_TO_SERVER = True
 UEDITOR_UPLOAD_PATH = MEDIA_ROOT
 UEDITOR_CONFIG_PATH = os.path.join(BASE_DIR, 'front', 'dist', 'ueditor', 'config.json')
+
+
+ONE_PAGE_NEWS_COUNT = 2
