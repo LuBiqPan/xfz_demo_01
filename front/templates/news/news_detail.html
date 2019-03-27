@@ -1,6 +1,6 @@
-
 {% extends 'base/front_base.html' %}
-
+{% load staticfiles %}
+{% load news_filters %}
 
 {% block title %}
     新闻详情
@@ -10,6 +10,21 @@
 {% block head %}
     <link rel="stylesheet" href="{% static 'css/news/news_detail.min.css' %}">
     <script src="{% static '/js/index.min.js' %}"></script>
+    <script src="{% static 'arttemplate/template-web.js' %}"></script>
+    <script src="{% static 'js/news_list.min.js' %}"></script>
+
+    <script id="comment-item" type="text/html">
+        {% verbatim %}
+            <li>
+                <div class="comment-info">
+                    <img src="https://avatar.csdn.net/C/3/E/3_csdnnews.jpg" alt="" class="avatar">
+                    <span class="author">{{ comment.author.username }}</span>
+                    <span class="pub-time">{{ comment.pub_time|timeSince }}</span>
+                </div>
+                <p class="comment-content">{{ comment.content }}</p>
+            </li>
+        {% endverbatim %}
+    </script>
 {% endblock %}
 
 
@@ -18,12 +33,12 @@
         <div class="wrapper">
             <div class="main-content-wrapper">
                 <div class="news-wrapper">
-                    <h1 class="title">首发丨A轮融资数千万，这家公司要让7000万人学会滑雪</h1>
+                    <h1 class="title">{{ news.title }}</h1>
                     <div class="news-info">
                         <div class="info-group">
-                            <span class="author">葫芦娃</span>
-                            <span class="pub-time">2月9日</span>
-                            <span class="category">热点</span>
+                            <span class="author">{{ news.author.username }}</span>
+                            <span class="pub-time">{{ news.pub_date|time_since }}</span>
+                            <span class="category">{{ news.category.name }}</span>
                         </div>
                         <div class="share-group">
                             <span>分享至：</span>
@@ -32,9 +47,7 @@
                         </div>
                     </div>
                     <article class="article">
-                        <div class="content-detail">
-                        <section data-role="outer" label="Powered by 135editor.com"><section><section><section><p><span style="color: rgb(63, 63, 63);">陈剑有点害怕，这是他生平第一次滑雪。</span></p><p><span style="color: rgb(63, 63, 63);">尽管有朋友的指导，他还是以“受伤”为这次滑雪之旅划上了句号。没有想到的是，两年后的他会选择在滑雪领域创业。</span></p><p><span style="color: rgb(63, 63, 63);">2015年，雪乐山正式成立。作为一家室内模拟滑雪连锁机构，其主要为4-12岁青少年及家庭提供滑雪的全方位服务。</span></p><p><span style="color: rgb(63, 63, 63);">官方资料显示，雪乐山目前已经在全国拥有超过30家门店，分布北京、深圳、天津等10座城市。其中，直营门店达19家，整体复购率在70%左右。</span></p><p><span style="color: rgb(63, 63, 63);">在接受采访时，陈剑向不凡商业独家透露，雪乐山已经于2018年完成数千万元的A轮融，投资方为新龙脉基金，此前雪乐山已经完成了两轮融资。</span></p></section></section></section><section><section><section><section><h3><span style="color: rgb(63, 63, 63);">离开体制，决定创业</span></h3></section></section></section></section><section><section><section><p><span style="color: rgb(63, 63, 63);">雪乐山奥林匹克公园旗舰店，数台滑雪设备分列一旁，明亮的灯光下，多位小学员正在教练的指导下耐心的练习着。</span></p><p><span style="color: rgb(63, 63, 63);">这里也是雪乐山的总部，不远处鸟巢、水立方……，这些北京奥运会留下的建筑清晰可见，陈剑如约出现在记者面前。</span></p><p><span style="color: rgb(63, 63, 63);">他的语调有些低沉，如果不仔细去听，很难搞清楚他在说什么。在交谈中，他也很少使用手势，即便是要向记者强调些什么。</span></p><p><span style="color: rgb(63, 63, 63);">2010年，陈剑从北京大学法律系毕业，之后在体制内渡过了三年的时光。2013年，决定创业的他还是丢下了铁饭碗。</span></p><p><span style="color: rgb(63, 63, 63);">不过，那时并没有具体方向的他，先去投资机构呆了一段时间。“其实就是边看项目，边找自己可以做的事情”。陈剑表示。</span></p><p><span style="color: rgb(63, 63, 63);">2015年，中国成功申办2022年冬奥会，全民滑雪的热情开始被点燃，其商业空间逐渐增大，陈剑敏锐的意识到创业的机会来了。</span></p><p><span style="color: rgb(63, 63, 63);">众所周知，滑雪时一项相对危险性的运动，很多拥有不错滑雪技术的用户，完全是靠摔出来的。如果在去滑雪场之前就掌握了一定的技巧，风险系数就会大大降低。</span></p><p><span style="color: rgb(63, 63, 63);">当时，在国外有一些室内滑雪设备，主要是用于运动员的日常培训和康复训练，陈剑就产生了把这些设备引进国内的想法。</span></p></section></section></section><section><section><section style="text-align: center;"><img class="" data-ratio="0.8472222" data-type="jpeg" data-w="1080" _width="100%" src="https://mpt.135editor.com/mmbiz_jpg/hzGVnWia1nhVHFzME2DpFVugOjuvVH2T9tWCNuiaUP27vY3e6TgEVCl5XSA8FiawwxXgQZibY0WbYibPAMlO24CppWg/640?wx_fmt=jpeg&amp;wx_co=1" data-fail="0" style="vertical-align: middle; width: 100%; visibility: visible !important;"></section></section></section><section><section><section><p style="text-align: center;"><span style="color: rgb(63, 63, 63);">雪乐山创始人 陈剑</span></p></section></section></section><section><section><section><p><span style="color: rgb(63, 63, 63);">2015年10月，雪乐山第一家直营店在北京开业。最初，陈剑盘算着能开四五家连锁店就可以了，并没有大规模经营的计划。</span></p><p><span style="color: rgb(63, 63, 63);">不过，当时由于没有找到明确的用户画像，只是笼统的瞄准喜欢滑雪的用户，那家生意并不是很好，“只能勉强维持运营”。</span></p><p><span style="color: rgb(63, 63, 63);">经过一番分析后，陈剑发现青少年群体的黏性要远高于成人用户。对于其中的原因，陈剑认为，成年人来室内滑雪是抱着娱乐的心态，青少年则不一样，他们更多是来学习滑雪的。</span></p><p><span style="color: rgb(63, 63, 63);">陈剑迅即把雪乐山定位于瞄准4-12岁青少年群体的滑雪培训机构。在他看来，这个年龄段，学习任务相对轻松，有充足的时间来练习滑雪。</span></p><p><span style="color: rgb(63, 63, 63);">搞清楚了用户群体，陈剑也有了大规模扩张的底气。从2016年下半年开始，雪乐山在北京又开了十几家门店。</span></p><p><span style="color: rgb(63, 63, 63);">为什么一直在北京开呢？陈剑透露，因为北京是冬奥会的主赛场，大家对滑雪的接受度比较高。“我们当时就是要求雪乐山的门店必须实现对北京的全覆盖”。他强调。</span></p></section></section></section><section><section><section style="text-align: center;"><img class="" data-ratio="0.75" data-type="jpeg" data-w="800" _width="100%" src="https://mpt.135editor.com/mmbiz_jpg/hzGVnWia1nhVHFzME2DpFVugOjuvVH2T9frmKmArWzQyWVUOu4YRib32rarYRibQPReD5HL961n8cYHj8wib9ry5aA/640?wx_fmt=jpeg&amp;wx_co=1" data-fail="0" style="vertical-align: middle; width: 100%; visibility: visible !important;"></section></section></section><section><section><section><p><span style="color: rgb(63, 63, 63);">作为一家培训机构，自然需要优质的教学体系，才能吸引到学员。据陈剑透露，雪乐山的课程设计主要是吸取国外的优秀的经验，并在教学中不断改进。</span></p><p><span style="color: rgb(63, 63, 63);">对于教练，雪乐山主要和体育院校合作培养。公司会将其分为不同的等级，定期进行考核，如归连续三次不合格者，就会被淘汰。</span></p><p><span style="color: rgb(63, 63, 63);">在室内培训之外，雪乐山也衍生出了销售滑雪设备、提供国内外滑雪旅行、大型滑雪赛事的主办/承办等业。在陈剑看来，门店只是入口，起到为这些业务引流的作用。</span></p><p><span style="color: rgb(63, 63, 63);">在收费上，雪乐山采取会员模式，客单价在一万元左右。用户可以根据自己的需要选择适合的课程，也可以选择雪乐山提供的其它服务。</span></p></section></section></section><section><section><section><section><h3><span style="color: rgb(63, 63, 63);">从直营到加盟</span></h3></section></section></section></section><section><section><section><p><span style="color: rgb(63, 63, 63);">2018年初，雪乐山在沈阳开了一家加盟店。没想到的是，那家店面的流水很好，甚至超过了北京的一些门店。</span></p><p><span style="color: rgb(63, 63, 63);">这坚定了陈剑要开加盟店的信心。在他看来，雪乐山要想实现全国布局，如果完全依靠直营门店运营能力有可能跟不上。</span></p><p><span style="color: rgb(63, 63, 63);">而加盟店资金回收时间短，雪乐山运营的压力也会相对较小，加盟商也更熟悉当地的情况，有利于业务的开展。</span></p><p><span style="color: rgb(63, 63, 63);">剑向不凡商业透露，对于加盟的门店，乐山从选址的标准、教练的培训、课程体系的搭建等各方面给予全方位指导。</span></p><p><span style="color: rgb(63, 63, 63);">每一个门店，雪乐山也会派去一位督导运营，出现问题可以直接给雪乐山总部进行沟通，包括新产品是否上线、如何提高业绩等，帮助门店快速运营起来。</span></p><p><span style="color: rgb(63, 63, 63);">对于加盟店员工的管理，陈剑也有自己的方法论。他透露，每一个加盟门店都会有监控，雪乐山品控部门会对门店进行检测，其督导团队也会定期巡店。</span></p><p><span style="color: rgb(63, 63, 63);">雪乐山除了收取加盟费外，还会根据门店的流水获得一定比例的抽成。“当然前提是保证加盟门店可以赚到钱的情况下”。</span></p><p><span style="color: rgb(63, 63, 63);">据陈剑透露，目前雪乐山加盟门店，单店模型中投入100万，3个月现金流可以收回成本。</span></p><p><span style="color: rgb(63, 63, 63);">回顾整个2018年，雪乐山一共在全国开了10家的加盟店，主要集中在二三四线城市，其中一家甚至开在了没有下过雪的海南。</span></p><p><span style="color: rgb(63, 63, 63);">在陈剑的计划里，一线城市外，雪乐山都会采取加盟的策略。“当然，我们在上海、广州开直营店，也主要是为了证明雪乐山在南方也可以很好的经营下去。”</span></p><p><span style="color: rgb(63, 63, 63);">在他看来，南方虽然少雪，但是用户对滑雪的好奇心很强。其次，经过在南方的运营也表明，这里的用户愿意为更高的客单价买单。</span></p><p><span style="color: rgb(63, 63, 63);">他强调，雪乐山接下来发展的重点依然是继续增开门店。他想在2019年让雪乐山拥有200-300家的加盟店。</span></p></section></section></section><section><section><section><section><h3><span style="color: rgb(63, 63, 63);">滑雪会是一条好的赛道吗？</span></h3></section></section></section></section><section><section><section><p><span style="color: rgb(63, 63, 63);">陈剑表示，除了安全的因素外，由于滑雪场一般位于郊区，室内滑雪还可以帮助用户节约时间，更加牢固的掌握滑雪技巧，这也是室内滑雪近年来快速发展的原因。</span></p><p><span style="color: rgb(63, 63, 63);">根据《中国滑雪产业白皮书》数据显示，2018 全年滑雪者人次约为 2113 万,相比 2017 年的 1847万,增长14.4%，而室内滑雪的增速更是超过20%。</span></p></section></section></section><section><section><section style="text-align: center;"><img class="" data-ratio="0.75" data-type="jpeg" data-w="800" _width="100%" src="https://mpt.135editor.com/mmbiz_jpg/hzGVnWia1nhVHFzME2DpFVugOjuvVH2T99fZ01sM8ZowrbibedEvUVI73XSM7CP0LdVVnibZIrTTrlwNichQic9qiccw/640?wx_fmt=jpeg&amp;wx_co=1" data-fail="0" style="vertical-align: middle; width: 100%; visibility: visible !important;"></section></section></section><section><section><section><p><span style="color: rgb(63, 63, 63);">随着北京冬奥会脚步的临近，政府也喊出了“3亿人上冰雪”的口号。据中国旅游研究院发布的预测2021-2022冰雪季，中国的冰雪旅游收入将达到6800亿元。</span></p><p><span style="color: rgb(63, 63, 63);">只不过，我国并不是一个冰雪终年覆盖的国家。对很多人来说，滑雪只是体验一下，一次性消费，这从数据中也可以反应出来。</span></p><p><span style="color: rgb(63, 63, 63);">同样是根据《中国滑雪产业白皮书》，2018年全年，我国的滑雪人数为1320万人，其中一次性的体验式滑雪者占比为75.38%，与2017年的75.2%基本持平。</span></p><p><span style="color: rgb(63, 63, 63);">除此之外，我国2018年的人均滑雪次数也只有可怜的1.49次。尽管有政策的激烈，滑雪在国内无疑还是一向小众运动，用户黏性太差。</span></p><p><span style="color: rgb(63, 63, 63);">对雪乐山也是如此，增加用户的活跃度至关重要。陈剑透露，雪乐山的每一个门店都会有俱乐部，通过平时的组织活动来增加用户的黏性。</span></p><p><span style="color: rgb(63, 63, 63);">此外，他表示雪乐山会推出专门针对滑雪人群的社区小程序，通过线下线上结合的方式，来调动大家的积极性。</span></p><p><span style="color: rgb(63, 63, 63);">谈及未来的发展规划，陈剑透露，在增开门店的基础上，雪乐山会推出自有的雪具销售品牌，以线下门店和商平台作为渠道，进行销售。</span></p></section></section></section></section>
-                    </div>
+                        {{ news.content|safe }}
                     </article>
                 </div>
                 <div class="comment-wrapper">
@@ -42,31 +55,19 @@
                     <textarea name="comment" class="comment-textarea login-textarea"
                               placeholder="立即登录，参与评论" ></textarea>
                     <div class="submit-btn-group">
-                        <button class="submit-btn">立即评论</button>
+                        <button class="submit-btn" data-news-id="{{ news.pk }}">立即评论</button>
                     </div>
                     <ul class="comment-list">
-                        <li>
-                            <div class="comment-info">
-                                <img src="https://pic3.zhimg.com/v2-176b1e1d4fe77fea51ec1f86aa6d69b2_xs.jpg"
-                                     alt="" class="avatar">
-                                <span class="author">小知了</span>
-                                <span class="pub-time">6小时前</span>
-                            </div>
-                            <p class="comment-content">
-                                这是第一条评论
-                            </p>
-                        </li>
-                        <li>
-                            <div class="comment-info">
-                                <img src="http://tb.himg.baidu.com/sys/portrait/item/f97bc57a?t=1494517271"
-                                     alt="" class="avatar">
-                                <span class="author">Lu.Biq Pan</span>
-                                <span class="pub-time">12 hours ago</span>
-                            </div>
-                            <p class="comment-content">
-                                Hello world!
-                            </p>
-                        </li>
+                        {% for comment in news.comments.all %}
+                            <li>
+                                <div class="comment-info">
+                                    <img src="https://avatar.csdn.net/C/3/E/3_csdnnews.jpg" alt="" class="avatar">
+                                    <span class="author">{{ comment.author.username }}</span>
+                                    <span class="pub-time">{{ comment.pub_time|time_since }}</span>
+                                </div>
+                                <p class="comment-content">{{ comment.content }}</p>
+                            </li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>

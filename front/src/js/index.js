@@ -147,43 +147,18 @@ Banner.prototype.run = function () {
 function Index () {
     var self = this;
     self.page = 2;
-
-    template.defaults.imports.timeSince = function (dateValue) {
-        var date = new Date(dateValue);
-        var datets = date.getTime();    // Time in millisecond.
-        var nowts = (new Date()).getTime();
-        var timeStamp = (nowts - datets) / 1000; // In second.
-
-        if (timeStamp < 60) {
-            return '刚刚';
-        } else if (timeStamp >= 60 && timeStamp < 60*60) {
-            var minutes = parseInt(timeStamp/60);
-            return  minutes + '分钟前';
-        } else if (timeStamp >= 60*60 && timeStamp < 60*60*24) {
-            var hours = parseInt(timeStamp/60/60);
-            return hours + '小时前';
-        } else if ( timeStamp >= 60*60*24 && timeStamp < 60*60*24*30) {
-            var days = parseInt(timeStamp/60/60/24);
-            return days + '天前';
-        } else {
-            var year = date.getFullYear();
-            var month = date.getMonth();
-            var day = date.getDay();
-            var hour = date.getHours();
-            var minute = date.getMinutes();
-            return year + "/" + month + "/" + day + " " + hour + ": " + minute;
-        }
-    }
+    self.category_id = 0;
+    self.loadMoreBtn = $("#load-more-btn");
 }
 
 Index.prototype.listenLoadMoreEvent = function () {
     var self = this;
-    var loadMoreBtn = $("#load-more-btn");
-    loadMoreBtn.click(function () {
+    self.loadMoreBtn.click(function () {
         xfzajax.get({
             "url": "/news/list/",
             "data": {
-                "p": self.page
+                "p": self.page,
+                "category_id": self.category_id
             },
             "success": function (result) {
                 if (result["code"] === 200) {
@@ -195,8 +170,43 @@ Index.prototype.listenLoadMoreEvent = function () {
                         ul.append(tpl);
                         self.page += 1;
                     } else {
-                        loadMoreBtn.hide();
+                        self.loadMoreBtn.hide();
                     }
+                }
+            }
+        });
+    });
+};
+
+Index.prototype.listenCategorySwitchEvent = function () {
+    var self = this;
+    var tabGroup = $(".list-tab");
+    tabGroup.children().click(function () {
+        // this: currently selected tag
+        var li = $(this);
+        var category_id = li.attr("data-category");
+        var page = 1;
+
+        xfzajax.get({
+            "url": "/news/list/",
+            "data": {
+                "category_id": category_id,
+                "p": page
+            },
+            "success": function (result) {
+                if (result["code"] === 200) {
+                    var newses = result["data"];
+                    var tpl = template("news-item", {"newses": newses});
+                    var newsListGroup = $(".list-inner-group");
+                    // Clear all content first.
+                    newsListGroup.empty();
+                    // Append news by category.
+                    newsListGroup.append(tpl);
+                    self.page = 2;
+                    self.category_id = category_id;
+                    // Add class "active" to current tag and remove "active" from others.
+                    li.addClass("active").siblings().removeClass("active");
+                    self.loadMoreBtn.show();
                 }
             }
         });
@@ -206,6 +216,7 @@ Index.prototype.listenLoadMoreEvent = function () {
 Index.prototype.run = function () {
     var self = this;
     self.listenLoadMoreEvent();
+    self.listenCategorySwitchEvent();
 };
 
 

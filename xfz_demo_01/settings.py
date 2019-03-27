@@ -25,7 +25,8 @@ SECRET_KEY = '%8as=qzgf*29mm53_rwgm_+2=l%x$gwb0(ztxu16ky!g$9l-6b'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -43,9 +44,11 @@ INSTALLED_APPS = [
     'apps.cms',
     'apps.xfzauth',
     'apps.ueditor',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -60,7 +63,7 @@ ROOT_URLCONF = 'xfz_demo_01.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,  'front', 'templates')]
+        'DIRS': [os.path.join(BASE_DIR, 'front', 'templates')]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -69,6 +72,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # 'django.template.context_processors.static',
             ],
             'builtins': [
                 'django.templatetags.static',
@@ -143,6 +147,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'front', 'dist')
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_dist')
 
 
 MEDIA_URL = '/media/'
@@ -169,3 +174,37 @@ UEDITOR_CONFIG_PATH = os.path.join(BASE_DIR, 'front', 'dist', 'ueditor', 'config
 
 
 ONE_PAGE_NEWS_COUNT = 2
+
+# Django debug toolbar configuration.
+INTERNAL_IPS = ['127.0.0.1']
+
+DEBUG_TOOLBAR_PANELS = [
+    # 代表是哪个django版本
+    'debug_toolbar.panels.versions.VersionsPanel',
+    # 用来计时的，判断加载当前页面总共花的时间
+    'debug_toolbar.panels.timer.TimerPanel',
+    # 读取django中的配置信息
+    'debug_toolbar.panels.settings.SettingsPanel',
+    # 看到当前请求头和响应头信息
+    'debug_toolbar.panels.headers.HeadersPanel',
+    # 当前请求的想信息（视图函数，Cookie信息，Session信息等）
+    'debug_toolbar.panels.request.RequestPanel',
+    # 查看SQL语句
+    'debug_toolbar.panels.sql.SQLPanel',
+    # 静态文件
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    # 模板文件
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    # 缓存
+    'debug_toolbar.panels.cache.CachePanel',
+    # 信号
+    'debug_toolbar.panels.signals.SignalsPanel',
+    # 日志
+    'debug_toolbar.panels.logging.LoggingPanel',
+    # 重定向
+    'debug_toolbar.panels.redirects.RedirectsPanel',
+]
+
+DEBUG_TOOLBAR_CONFIG = {
+    'JQUERY_URL': '',
+}
