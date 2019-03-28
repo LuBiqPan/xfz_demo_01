@@ -6,6 +6,7 @@ from .models import *
 from .forms import PublicCommentForm
 from .serializes import NewsSerializer, CommentSerializer
 from utils import restful
+from apps.xfzauth.decorators import xfz_login_required
 
 
 def index(request):
@@ -40,7 +41,7 @@ def news_list(request):
 
 def news_detail(request, news_id):
     try:
-        news = News.objects.select_related('category', 'author').get(pk=news_id)
+        news = News.objects.select_related('category', 'author').prefetch_related('comments__author').get(pk=news_id)
         context = {
             'news': news
         }
@@ -49,6 +50,7 @@ def news_detail(request, news_id):
         raise Http404
 
 
+@xfz_login_required
 def public_comment(request):
     form = PublicCommentForm(request.POST)
     if form.is_valid():
