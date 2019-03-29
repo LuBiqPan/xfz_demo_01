@@ -16,7 +16,8 @@ def index(request):
     categories = NewsCategory.objects.all()
     context = {
         'newses': newses,
-        'categories': categories
+        'categories': categories,
+        'banners': Banner.objects.all()
     }
 
     return render(request, 'news/index.html', context=context)

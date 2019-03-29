@@ -69,7 +69,11 @@
     <script id="banner-item" type="text/html">
         {% verbatim %}
             <div>
+                {{ if banner }}
+                <div class="box banner-item" data-banner-id="{{ banner.id }}">
+                {{ else }}
                 <div class="box banner-item">
+                {{ /if }}
                     <div class="box-header">
                         {{ if banner }}
                             <span class="priority">优先级：{{ banner.priority }}</span>

@@ -6,7 +6,7 @@ from django.conf import settings
 
 from apps.news.models import NewsCategory, News, Banner
 from utils import restful
-from .forms import EditNewsCategoryForm, WriteNewsForm, AddBannerForm
+from .forms import EditNewsCategoryForm, WriteNewsForm, AddBannerForm, EditBannerForm
 from apps.news.serializes import BannerSerializer
 
 import os
@@ -103,14 +103,37 @@ def banner_list(request):
     return restful.result(data=serializer.data)
 
 
-def add_banners(request):
+def add_banner(request):
     form = AddBannerForm(request.POST)
     if form.is_valid():
         priority = form.cleaned_data.get('priority')
         image_url = form.cleaned_data.get('image_url')
         link_to = form.cleaned_data.get('link_to')
         banner = Banner.objects.create(priority=priority, image_url=image_url, link_to=link_to)
-        return restful.result(data={"banner_id": banner.pk})
+        data = {
+            "banner_id": banner.pk,
+            "priority": banner.priority
+        }
+        return restful.result(data=data)
+    else:
+        return restful.params_error(message=form.get_errors())
+
+
+def delete_banner(request):
+    banner_id = request.POST.get('banner_id')
+    Banner.objects.filter(pk=banner_id).delete()
+    return restful.ok()
+
+
+def edit_banner(request):
+    form = EditBannerForm(request.POST)
+    if form.is_valid():
+        pk = form.cleaned_data.get('pk')
+        priority = form.cleaned_data.get('priority')
+        link_to = form.cleaned_data.get('link_to')
+        image_url = form.cleaned_data.get('image_url')
+        Banner.objects.filter(pk=pk).update(priority=priority, link_to=link_to, image_url=image_url)
+        return restful.ok()
     else:
         return restful.params_error(message=form.get_errors())
 
