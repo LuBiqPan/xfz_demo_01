@@ -4,11 +4,14 @@ from django.views.generic import View
 from django.views.decorators.http import require_POST, require_GET
 from django.conf import settings
 from django.core.paginator import Paginator
+from django.utils.timezone import make_aware
 
 from apps.news.models import NewsCategory, News, Banner
 from utils import restful
-from .forms import EditNewsCategoryForm, WriteNewsForm, AddBannerForm, EditBannerForm
+from .forms import EditNewsCategoryForm, WriteNewsForm, AddBannerForm, EditBannerForm, EditNewsForm
 from apps.news.serializes import BannerSerializer
+from datetime import datetime
+from urllib import parse
 
 import os
 import qiniu
@@ -23,16 +26,51 @@ class NewsListView(View):
 
     def get(self, request):
         page = int(request.GET.get('p', 1))
+        start = request.GET.get('start')
+        end = request.GET.get('end')
+        title = request.GET.get('title')
+        category_id = int(request.GET.get('category', 0) or 0)
         newses = News.objects.select_related('category', 'author').all()
+
+        # Filter by start time and end time.
+        if start or end:
+            if start:
+                start_date = datetime.strptime(start, '%Y/%m/%d')
+            else:
+                start_date = datetime(year=2019, month=1, day=1)
+            if end:
+                end_date = datetime.strptime(end, '%Y/%m/%d')
+            else:
+                end_date = datetime.today()
+            newses = newses.filter(pub_date__range=(make_aware(start_date), make_aware(end_date)))
+
+        # Filter by title keywords.
+        if title:
+            newses = newses.filter(title__icontains=title)
+
+        # Filter by category.
+        if category_id:
+            newses = newses.filter(category=category_id)
+
         paginator = Paginator(newses, 2)
         page_obj = paginator.page(page)
 
         context_data = self.get_pagination_data(paginator, page_obj)
         context = {
-            'categories': News.objects.all(),
+            'categories': NewsCategory.objects.all(),
             'newses': page_obj.object_list,
             'page_obj': page_obj,
             'paginator': paginator,
+            'start': start,
+            'end': end,
+            'title': title,
+            'category_id': category_id,
+            'url_query': '&' + parse.urlencode({
+                'start': start or '',
+                'end': end or '',
+                'title': title or '',
+                'category': category_id or '',
+            }),
         }
         context.update(context_data)
         return render(request, 'cms/news_list.html', context=context)
@@ -96,6 +134,34 @@ class WriteNewsView(View):
             # Create news.
             News.objects.create(title=title, desc=desc, thumbnail=thumbnail,
                                 content=content, category=category, author=request.user)
+            return restful.ok()
+        else:
+            return restful.params_error(message=form.get_errors())
+
+
+class EditNewsView(View):
+    def get(self, request):
+        news_id = request.GET.get('news_id')
+        news = News.objects.get(pk=news_id)
+        context = {
+            'news': news,
+            'categories': NewsCategory.objects.all(),
+        }
+        return render(request, 'cms/write_news.html', context=context)
+
+    def post(self, request):
+        form = EditNewsForm(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data.get('title')
+            desc = form.cleaned_data.get('desc')
+            thumbnail = form.cleaned_data.get('thumbnail')
+            content = form.cleaned_data.get('content')
+            category_id = form.cleaned_data.get('category')
+            pk = form.cleaned_data.get('pk')
+            category = NewsCategory.objects.get(pk=category_id)
+            print("pk: ", pk)
+            # Edit news.
+            News.objects.filter(pk=pk).update(title=title, desc=desc, thumbnail=thumbnail, content=content, category=category)
             return restful.ok()
         else:
             return restful.params_error(message=form.get_errors())

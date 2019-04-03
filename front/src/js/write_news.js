@@ -119,8 +119,15 @@ News.prototype.listenSubmitEvent = function () {
         var thumbnail = $("input[name='thumbnail']").val();
         var content = window.ue.getContent();
 
+        var url = "";
+        if (pk) {
+            url = "/cms/edit_news/";
+        } else {
+            url = "/cms/write_news/";
+        }
+
         xfzajax.post({
-            "url": "/cms/write_news/",
+            "url": url,
             "data": {
                 "title": title,
                 "category": category,
