@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'apps.xfzauth',
     'apps.ueditor',
     'debug_toolbar',
+    'apps.course',
 ]
 
 MIDDLEWARE = [
@@ -208,3 +209,23 @@ DEBUG_TOOLBAR_PANELS = [
 DEBUG_TOOLBAR_CONFIG = {
     'JQUERY_URL': '',
 }
+
+
+# 百度云的配置
+# 控制台->用户中心->用户ID
+BAIDU_CLOUD_USER_ID = 'd0755b9cada14f2ea1260a7547d82d55'
+# 点播VOD->全局设置->发布设置->安全设置->UserKey
+BAIDU_CLOUD_USER_KEY = '04e206b393c0463d'
+
+
+# HAYSTACK_CONNECTIONS = {
+#     'default': {
+#         # 设置haystack的搜索引擎
+#         'ENGINE': 'apps.news.whoosh_cn_backend.WhooshEngine',
+#         # 设置索引文件的位置
+#         'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+#     }
+# }
+#
+# # 增删改后自动创建索引
+# HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'

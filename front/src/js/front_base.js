@@ -281,7 +281,7 @@ Auth.prototype.listenSmsCaptchaEvent = function () {
                 'telephone' : telephone
             },
             'success': function (result) {
-                if (result['code'] == 200) {
+                if (result['code'] === 200) {
                     self.smsSuccessEvent();
                 }
             },
@@ -305,7 +305,7 @@ $(function () {
 
 
 $(function () {
-   if (template) {
+   if (window.template) {
         template.defaults.imports.timeSince = function (dateValue) {
             var date = new Date(dateValue);
             var datets = date.getTime();    // Time in millisecond.
