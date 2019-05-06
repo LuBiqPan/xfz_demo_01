@@ -2,8 +2,10 @@
 from django.shortcuts import render
 from django.http import Http404
 from django.conf import settings
+
 from utils import restful
 from .models import *
+from apps.xfzauth.decorators import xfz_login_required
 
 import time, hmac, os, hashlib
 
@@ -49,3 +51,14 @@ def course_token(request):
     signature = hmac.new(key, message, digestmod=hashlib.sha256).hexdigest()
     token = '{0}_{1}_{2}'.format(signature, USER_ID, expiration_time)
     return restful.result(data={'token': token})
+
+
+@xfz_login_required
+def course_order(request, course_id):
+    course = Course.objects.get(pk=course_id)
+    order = CourseOrder.objects.create(course=course, buyer=request.user, status=1, amount=course.price)
+    context = {
+        'course': course,
+        'order': order
+    }
+    return render(request, 'course/course_order.html', context=context)
