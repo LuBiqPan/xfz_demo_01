@@ -14,7 +14,7 @@ django-crontab==0.7.1
 django-debug-toolbar==1.11
 django-memcached==0.1.2
 django-shortuuidfield==0.1.3
-djangorestframework==3.9.2
+djangorestframework==3.11.2
 dominate==2.3.5
 Flask==1.0.2
 Flask-Bootstrap==3.3.7.1
